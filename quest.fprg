@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value="Golch dun (GPA)"/>
+        <attribute name="authors" value="AI-assisted draft - APL121"/>
+        <attribute name="about" value="Credit-weighted GPA, grade sheet, input validation, and top-three ranking"/>
+        <attribute name="saved" value="2026-10-28 09:55:00 AM"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <declare name="i" type="Integer" array="False" size=""/>
+            <declare name="j" type="Integer" array="False" size=""/>
+            <declare name="totalCredits" type="Integer" array="False" size=""/>
+            <declare name="tempCredit" type="Integer" array="False" size=""/>
+            <declare name="tempSubject" type="String" array="False" size=""/>
+            <declare name="tempLetter" type="String" array="False" size=""/>
+            <declare name="tempScore" type="Real" array="False" size=""/>
+            <declare name="tempPoint" type="Real" array="False" size=""/>
+            <declare name="weightedSum" type="Real" array="False" size=""/>
+            <declare name="gpa" type="Real" array="False" size=""/>
+            <declare name="subject" type="String" array="True" size="10"/>
+            <declare name="letter" type="String" array="True" size="10"/>
+            <declare name="score" type="Real" array="True" size="10"/>
+            <declare name="credit" type="Integer" array="True" size="10"/>
+            <declare name="point" type="Real" array="True" size="10"/>
+            <output expression="&quot;GOLCH DUN (GPA) TOOTSOOL&quot;" newline="True"/>
+            <call expression="PrintScale()"/>
+            <do expression="n &lt; 5 || n &gt; 10">
+                <output expression="&quot;Hicheeliin too (5-10) oruulna uu:&quot;" newline="True"/>
+                <input variable="n"/>
+                <if expression="n &lt; 5 || n &gt; 10">
+                    <then>
+                        <output expression="&quot;Aldaa: 5-aas 10 hoorond too oruulna uu.&quot;" newline="True"/>
+                    </then>
+                    <else/>
+                </if>
+            </do>
+            <assign variable="totalCredits" expression="0"/>
+            <assign variable="weightedSum" expression="0"/>
+            <for variable="i" start="0" end="n - 1" step="1">
+                <output expression="ToString(i + 1) &amp; &quot;-r hicheeliin ner (zaigui):&quot;" newline="True"/>
+                <input variable="subject[i]"/>
+                <do expression="score[i] &lt; 0 || score[i] &gt; 100">
+                    <output expression="&quot;Onoo (0-100) oruulna uu:&quot;" newline="True"/>
+                    <input variable="score[i]"/>
+                    <if expression="score[i] &lt; 0 || score[i] &gt; 100">
+                        <then>
+                            <output expression="&quot;Aldaa: onoo 0-100 hoorond baih yostoi.&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <do expression="credit[i] &lt; 1 || credit[i] &gt; 6">
+                    <output expression="&quot;Kredit (1-6) oruulna uu:&quot;" newline="True"/>
+                    <input variable="credit[i]"/>
+                    <if expression="credit[i] &lt; 1 || credit[i] &gt; 6">
+                        <then>
+                            <output expression="&quot;Aldaa: kredit 1-6 hoorond baih yostoi.&quot;" newline="True"/>
+                        </then>
+                        <else/>
+                    </if>
+                </do>
+                <assign variable="letter[i]" expression="GetLetter(score[i])"/>
+                <assign variable="point[i]" expression="GetPoint(score[i])"/>
+                <assign variable="totalCredits" expression="totalCredits + credit[i]"/>
+                <assign variable="weightedSum" expression="weightedSum + point[i] * credit[i]"/>
+            </for>
+            <assign variable="gpa" expression="weightedSum / totalCredits"/>
+            <output expression="&quot;DUNGiin HUudas&quot;" newline="True"/>
+            <output expression="&quot;Dugaar | Hicheel | Onoo | Useg | Kredit | Point&quot;" newline="True"/>
+            <for variable="i" start="0" end="n - 1" step="1">
+                <output expression="ToString(i + 1) &amp; &quot; | &quot; &amp; subject[i] &amp; &quot; | &quot; &amp; ToString(score[i]) &amp; &quot; | &quot; &amp; letter[i] &amp; &quot; | &quot; &amp; ToString(credit[i]) &amp; &quot; | &quot; &amp; ToString(point[i])" newline="True"/>
+            </for>
+            <output expression="&quot;Niit kredit: &quot; &amp; ToString(totalCredits)" newline="True"/>
+            <output expression="&quot;Credit-weighted GPA: &quot; &amp; ToString(gpa)" newline="True"/>
+            <if expression="gpa &gt;= 3.5 &amp;&amp; gpa &lt;= 4.0">
+                <then>
+                    <output expression="&quot;GPA angilal: Mash sain&quot;" newline="True"/>
+                </then>
+                <else>
+                    <if expression="gpa &gt;= 3.0 &amp;&amp; gpa &lt; 3.5">
+                        <then>
+                            <output expression="&quot;GPA angilal: Sain&quot;" newline="True"/>
+                        </then>
+                        <else>
+                            <if expression="gpa &gt;= 2.0 &amp;&amp; gpa &lt; 3.0">
+                                <then>
+                                    <output expression="&quot;GPA angilal: Dund&quot;" newline="True"/>
+                                </then>
+                                <else>
+                                    <output expression="&quot;GPA angilal: Sain bolgoh shaardlagatai&quot;" newline="True"/>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <for variable="i" start="0" end="n - 2" step="1">
+                <for variable="j" start="i + 1" end="n - 1" step="1">
+                    <if expression="score[j] &gt; score[i]">
+                        <then>
+                            <assign variable="tempSubject" expression="subject[i]"/>
+                            <assign variable="subject[i]" expression="subject[j]"/>
+                            <assign variable="subject[j]" expression="tempSubject"/>
+                            <assign variable="tempLetter" expression="letter[i]"/>
+                            <assign variable="letter[i]" expression="letter[j]"/>
+                            <assign variable="letter[j]" expression="tempLetter"/>
+                            <assign variable="tempScore" expression="score[i]"/>
+                            <assign variable="score[i]" expression="score[j]"/>
+                            <assign variable="score[j]" expression="tempScore"/>
+                            <assign variable="tempCredit" expression="credit[i]"/>
+                            <assign variable="credit[i]" expression="credit[j]"/>
+                            <assign variable="credit[j]" expression="tempCredit"/>
+                            <assign variable="tempPoint" expression="point[i]"/>
+                            <assign variable="point[i]" expression="point[j]"/>
+                            <assign variable="point[j]" expression="tempPoint"/>
+                        </then>
+                        <else/>
+                    </if>
+                </for>
+            </for>
+            <output expression="&quot;HAMGIIN UNDUR 3 DUN (onoogoor)&quot;" newline="True"/>
+            <output expression="&quot;Hicheel | Onoo | Useg&quot;" newline="True"/>
+            <for variable="i" start="0" end="2" step="1">
+                <output expression="subject[i] &amp; &quot; | &quot; &amp; ToString(score[i]) &amp; &quot; | &quot; &amp; letter[i]" newline="True"/>
+            </for>
+        </body>
+    </function>
+    <function name="PrintScale" type="None" variable="">
+        <parameters/>
+        <body>
+            <output expression="&quot;Dunii durem: 90-100=A(4), 80-89=B(3), 70-79=C(2), 60-69=D(1), 0-59=F(0)&quot;" newline="True"/>
+            <output expression="&quot;GPA = niit (kredit * grade point) / niit kredit&quot;" newline="True"/>
+        </body>
+    </function>
+    <function name="GetLetter" type="String" variable="result">
+        <parameters>
+            <parameter name="scoreValue" type="Real" array="False"/>
+        </parameters>
+        <body>
+            <declare name="result" type="String" array="False" size=""/>
+            <if expression="scoreValue &gt;= 90 &amp;&amp; scoreValue &lt;= 100">
+                <then>
+                    <assign variable="result" expression="&quot;A&quot;"/>
+                </then>
+                <else>
+                    <if expression="scoreValue &gt;= 80 &amp;&amp; scoreValue &lt; 90">
+                        <then>
+                            <assign variable="result" expression="&quot;B&quot;"/>
+                        </then>
+                        <else>
+                            <if expression="scoreValue &gt;= 70 &amp;&amp; scoreValue &lt; 80">
+                                <then>
+                                    <assign variable="result" expression="&quot;C&quot;"/>
+                                </then>
+                                <else>
+                                    <if expression="scoreValue &gt;= 60 &amp;&amp; scoreValue &lt; 70">
+                                        <then>
+                                            <assign variable="result" expression="&quot;D&quot;"/>
+                                        </then>
+                                        <else>
+                                            <assign variable="result" expression="&quot;F&quot;"/>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="GetPoint" type="Real" variable="result">
+        <parameters>
+            <parameter name="scoreValue" type="Real" array="False"/>
+        </parameters>
+        <body>
+            <declare name="result" type="Real" array="False" size=""/>
+            <if expression="scoreValue &gt;= 90 &amp;&amp; scoreValue &lt;= 100">
+                <then>
+                    <assign variable="result" expression="4"/>
+                </then>
+                <else>
+                    <if expression="scoreValue &gt;= 80 &amp;&amp; scoreValue &lt; 90">
+                        <then>
+                            <assign variable="result" expression="3"/>
+                        </then>
+                        <else>
+                            <if expression="scoreValue &gt;= 70 &amp;&amp; scoreValue &lt; 80">
+                                <then>
+                                    <assign variable="result" expression="2"/>
+                                </then>
+                                <else>
+                                    <if expression="scoreValue &gt;= 60 &amp;&amp; scoreValue &lt; 70">
+                                        <then>
+                                            <assign variable="result" expression="1"/>
+                                        </then>
+                                        <else>
+                                            <assign variable="result" expression="0"/>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+</flowgorithm>
